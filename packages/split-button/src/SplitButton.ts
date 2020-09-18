@@ -21,12 +21,12 @@ import {
     SizedMixin,
 } from '@spectrum-web-components/base';
 
+import '@spectrum-web-components/popover/sp-popover.js';
 import '@spectrum-web-components/button/sp-button.js';
-import '@spectrum-web-components/icon/sp-icon.js';
 import { ButtonVariants } from '@spectrum-web-components/button';
 import { PickerBase } from '@spectrum-web-components/picker';
-import { Chevron100Icon } from '@spectrum-web-components/icons-ui';
-import { MoreIcon } from '@spectrum-web-components/icons-workflow';
+import '@spectrum-web-components/icons-ui/icons/sp-icon-chevron100.js';
+import '@spectrum-web-components/icons-workflow/icons/sp-icon-more.js';
 import chevronStyles from '@spectrum-web-components/icon/src/spectrum-icon-chevron.css.js';
 import styles from './split-button.css.js';
 
@@ -139,15 +139,15 @@ export class SplitButton extends SizedMixin(PickerBase) {
                     variant=${this.variant}
                     size=${this.size}
                 >
-                    <sp-icon
-                        class="icon ${this.type === 'field'
-                            ? chevronClass[this.size]
-                            : ''}"
-                    >
-                        ${this.type === 'field'
-                            ? Chevron100Icon()
-                            : MoreIcon({ hidden: true })}
-                    </sp-icon>
+                    ${this.type === 'field'
+                        ? html`
+                              <sp-icon-chevron100
+                                  class="icon ${chevronClass[this.size]}"
+                              ></sp-icon-chevron100>
+                          `
+                        : html`
+                              <sp-icon-more class="icon"></sp-icon-more>
+                          `}
                 </sp-button>
             `,
         ];

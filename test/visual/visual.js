@@ -72,6 +72,7 @@ module.exports = {
                         appIndex: 'index.html',
                         rootDir: path.resolve(
                             process.cwd(),
+                            'projects',
                             'documentation',
                             'dist',
                             'storybook'

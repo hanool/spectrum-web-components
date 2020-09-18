@@ -26,8 +26,7 @@ import pickerStyles from './picker.css.js';
 import chevronStyles from '@spectrum-web-components/icon/src/spectrum-icon-chevron.css.js';
 
 import { Focusable } from '@spectrum-web-components/shared/src/focusable.js';
-import '@spectrum-web-components/icon/sp-icon.js';
-import { Chevron100Icon } from '@spectrum-web-components/icons-ui';
+import '@spectrum-web-components/icons-ui/icons/sp-icon-chevron100.js';
 import '@spectrum-web-components/icons-workflow/icons/sp-icon-alert.js';
 import {
     MenuItem,
@@ -315,9 +314,9 @@ export class PickerBase extends SizedMixin(Focusable) {
                           <sp-icon-alert class="validationIcon"></sp-icon-alert>
                       `
                     : nothing}
-                <sp-icon class="icon picker ${chevronClass[this.size]}">
-                    ${Chevron100Icon()}
-                </sp-icon>
+                <sp-icon-chevron100
+                    class="icon picker ${chevronClass[this.size]}"
+                ></sp-icon-chevron100>
             `,
         ];
     }

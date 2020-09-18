@@ -121,7 +121,7 @@ jobs:
             - persist_to_workspace:
                   root: /
                   paths:
-                      - root/project/documentation/dist
+                      - root/project/projects/documentation/dist
 
     visual-lightest-medium-ltr:
         executor: node
@@ -288,18 +288,16 @@ jobs:
 
         steps:
             - downstream
-            - run: cp documentation/404.html documentation/dist/
-            - run: touch documentation/dist/.nojekyll
+            - run: touch projects/documentation/dist/.nojekyll
             - run: git config --global user.email "circleci@adobe.com" && git config --global user.name "CircleCI"
-            - run: yarn gh-pages -d documentation/dist -m "[skip ci] update demonstration site" -t
+            - run: yarn gh-pages -d projects/documentation/dist -m "[skip ci] update demonstration site" -t
 
     publish-preview:
         executor: node
 
         steps:
             - downstream
-            - run: yarn docs:build
-            - run: echo '/*    /index.html   200' > documentation/dist/_redirects
+            - run: echo '/*    /index.html   200' > projects/documentation/dist/_redirects
             - run: yarn netlify deploy
 
 workflows:
