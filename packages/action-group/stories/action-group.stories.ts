@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { html, TemplateResult } from '@spectrum-web-components/base';
+import { spreadProps } from '@open-wc/lit-helpers';
 
 import '../sp-action-group.js';
 import '@spectrum-web-components/action-button/sp-action-button.js';
@@ -27,9 +28,15 @@ export default {
     component: 'sp-action-group',
 };
 
-export const Default = (): TemplateResult => {
+interface Properties {
+    compact?: boolean;
+    emphasized?: boolean;
+    quiet?: boolean;
+}
+
+export const Default = (args: Properties): TemplateResult => {
     return html`
-        <sp-action-group>
+        <sp-action-group ...=${spreadProps(args)}>
             <sp-action-button>Button 1</sp-action-button>
             <sp-action-button>Longer Button 2</sp-action-button>
             <sp-action-button>Short 3</sp-action-button>
@@ -37,9 +44,12 @@ export const Default = (): TemplateResult => {
     `;
 };
 
-export const selectsSingle = (): TemplateResult => {
+export const selectsSingle = (args: Properties): TemplateResult => {
     return html`
         <sp-action-group
+            ?compact=${args.compact}
+            ?emphasized=${args.emphasized}
+            ?quiet=${args.quiet}
             label="Favorite Color"
             selects="single"
             @change=${({ target }: Event & { target: ActionGroup }) => {
@@ -58,12 +68,12 @@ export const selectsSingle = (): TemplateResult => {
     `;
 };
 
-export const selectsMultiple = (): TemplateResult => {
+export const selectsMultiple = (args: Properties): TemplateResult => {
     return html`
         <sp-action-group
+            ...=${spreadProps(args)}
             label="Favorite Colors"
             selects="multiple"
-            emphasized
             @change=${({ target }: Event & { target: ActionGroup }) => {
                 const next = target.nextElementSibling as HTMLDivElement;
                 next.textContent = `Selected: ${JSON.stringify(
@@ -89,9 +99,7 @@ export const iconsOnly = (): TemplateResult => {
                 </sp-icon>
             </sp-action-button>
             <sp-action-button label="Info">
-                <sp-icon slot="icon">
-                    ${InfoIcon({ hidden: true })}
-                </sp-icon>
+                <sp-icon slot="icon">${InfoIcon({ hidden: true })}</sp-icon>
             </sp-action-button>
             <sp-action-button label="View All Tags">
                 <sp-icon slot="icon">
@@ -111,9 +119,7 @@ export const quietIconsOnly = (): TemplateResult => {
                 </sp-icon>
             </sp-action-button>
             <sp-action-button label="Info">
-                <sp-icon slot="icon">
-                    ${InfoIcon({ hidden: true })}
-                </sp-icon>
+                <sp-icon slot="icon">${InfoIcon({ hidden: true })}</sp-icon>
             </sp-action-button>
             <sp-action-button label="View All Tags">
                 <sp-icon slot="icon">
@@ -143,9 +149,7 @@ export const compactIconsOnly = (): TemplateResult => {
                 </sp-icon>
             </sp-action-button>
             <sp-action-button label="Info">
-                <sp-icon slot="icon">
-                    ${InfoIcon({ hidden: true })}
-                </sp-icon>
+                <sp-icon slot="icon">${InfoIcon({ hidden: true })}</sp-icon>
             </sp-action-button>
             <sp-action-button label="View All Tags">
                 <sp-icon slot="icon">
@@ -165,9 +169,7 @@ export const compactQuietIconsOnly = (): TemplateResult => {
                 </sp-icon>
             </sp-action-button>
             <sp-action-button label="Info">
-                <sp-icon slot="icon">
-                    ${InfoIcon({ hidden: true })}
-                </sp-icon>
+                <sp-icon slot="icon">${InfoIcon({ hidden: true })}</sp-icon>
             </sp-action-button>
             <sp-action-button label="View All Tags">
                 <sp-icon slot="icon">
@@ -197,9 +199,7 @@ export const iconsOnlyVertical = (): TemplateResult => {
                 </sp-icon>
             </sp-action-button>
             <sp-action-button label="Info">
-                <sp-icon slot="icon">
-                    ${InfoIcon({ hidden: true })}
-                </sp-icon>
+                <sp-icon slot="icon">${InfoIcon({ hidden: true })}</sp-icon>
             </sp-action-button>
             <sp-action-button label="View All Tags">
                 <sp-icon slot="icon">
@@ -219,9 +219,7 @@ export const quietIconsOnlyVertical = (): TemplateResult => {
                 </sp-icon>
             </sp-action-button>
             <sp-action-button label="Info">
-                <sp-icon slot="icon">
-                    ${InfoIcon({ hidden: true })}
-                </sp-icon>
+                <sp-icon slot="icon">${InfoIcon({ hidden: true })}</sp-icon>
             </sp-action-button>
             <sp-action-button label="View All Tags">
                 <sp-icon slot="icon">
@@ -251,9 +249,7 @@ export const compactIconsOnlyVertical = (): TemplateResult => {
                 </sp-icon>
             </sp-action-button>
             <sp-action-button label="Info">
-                <sp-icon slot="icon">
-                    ${InfoIcon({ hidden: true })}
-                </sp-icon>
+                <sp-icon slot="icon">${InfoIcon({ hidden: true })}</sp-icon>
             </sp-action-button>
             <sp-action-button label="View All Tags">
                 <sp-icon slot="icon">
@@ -273,9 +269,7 @@ export const compactQuietIconsOnlyVertical = (): TemplateResult => {
                 </sp-icon>
             </sp-action-button>
             <sp-action-button label="Info">
-                <sp-icon slot="icon">
-                    ${InfoIcon({ hidden: true })}
-                </sp-icon>
+                <sp-icon slot="icon">${InfoIcon({ hidden: true })}</sp-icon>
             </sp-action-button>
             <sp-action-button label="View All Tags">
                 <sp-icon slot="icon">
@@ -305,9 +299,7 @@ export const iconsOnlyJustified = (): TemplateResult => {
                 </sp-icon>
             </sp-action-button>
             <sp-action-button label="Info">
-                <sp-icon slot="icon">
-                    ${InfoIcon({ hidden: true })}
-                </sp-icon>
+                <sp-icon slot="icon">${InfoIcon({ hidden: true })}</sp-icon>
             </sp-action-button>
             <sp-action-button label="View All Tags">
                 <sp-icon slot="icon">
@@ -327,9 +319,7 @@ export const compactIconsOnlyJustified = (): TemplateResult => {
                 </sp-icon>
             </sp-action-button>
             <sp-action-button label="Info">
-                <sp-icon slot="icon">
-                    ${InfoIcon({ hidden: true })}
-                </sp-icon>
+                <sp-icon slot="icon">${InfoIcon({ hidden: true })}</sp-icon>
             </sp-action-button>
             <sp-action-button label="View All Tags">
                 <sp-icon slot="icon">
