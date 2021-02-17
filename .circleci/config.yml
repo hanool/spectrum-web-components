@@ -8,7 +8,7 @@ executors:
 parameters:
     current_golden_images_hash:
         type: string
-        default: f4b6fc159ab3d6f90437fca2db7acbd9bc3dc77f
+        default: 82b56a0dd86631e0841d98625c5eb0e4302ccb4d
 commands:
     downstream:
         steps:
@@ -29,7 +29,7 @@ commands:
                   keys:
                       - v2-golden-images-<< pipeline.parameters.current_golden_images_hash >>-<< parameters.regression_color >>-<< parameters.regression_scale >>-<< parameters.regression_dir >>-
                       - v2-golden-images-main-<< parameters.regression_color >>-<< parameters.regression_scale >>-<< parameters.regression_dir >>-
-            - run: yarn test:visual:ci --concurrency=2 --color=<< parameters.regression_color >> --scale=<< parameters.regression_scale >> --dir=<< parameters.regression_dir >>
+            - run: yarn test:visual:ci --concurrency=4 --color=<< parameters.regression_color >> --scale=<< parameters.regression_scale >> --dir=<< parameters.regression_dir >>
             - run:
                   when: on_fail
                   command: cp -RT test/visual/screenshots-current/ci test/visual/screenshots-baseline/ci

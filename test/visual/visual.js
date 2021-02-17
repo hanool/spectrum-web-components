@@ -32,12 +32,44 @@ module.exports = {
         dir = 'ltr',
         concurrency = 10
     ) {
-        let stories = storiesAll, // storiesAll.splice(0, 8),
+        let stories = storiesAll, // .splice(0, 20),
+            storyPromises = [],
             testQueue = [],
             results = [],
             server,
             browser,
-            viewport = { width: 800, height: 600 };
+            viewport = { width: 800, height: 600 },
+            contextOpen = true;
+
+        const startBrowser = async () => {
+            if (browser) {
+                browser.close();
+            }
+            contextOpen = true;
+            return await playwright['chromium'].launchPersistentContext(
+                `${baselineDir}/${type}/userDataDir`,
+                {
+                    viewport,
+                }
+            );
+        };
+
+        const prepareNewBrowserPage = async (browser) => {
+            let page;
+            try {
+                page = await browser.newPage();
+            } catch (error) {
+                browser = await startBrowser();
+                page = await browser.newPage();
+            }
+            page.on('close', (msg) => {
+                console.log(`Page closed: ${msg}`);
+            });
+            // prevent hover based inaccuracies in screenshots by
+            // moving the mouse off of the screen before loading tests
+            await page.mouse.move(-5, -5);
+            return page;
+        };
 
         describe('👀 page screenshots are correct', function () {
             before(async () => {
@@ -78,19 +110,14 @@ module.exports = {
                         ),
                     },
                 });
-                browser = await playwright['chromium'].launchPersistentContext(
-                    `${baselineDir}/${type}/userDataDir`,
-                    {
-                        viewport,
-                    }
-                );
+                browser = await startBrowser();
+                browser.on('close', async (msg) => {
+                    contextOpen = false;
+                    console.log(`Context closed: ${msg}`);
+                });
                 for (let i = 0; i < concurrency; i += 1) {
                     (async () => {
-                        const page = await browser.newPage();
-                        // prevent hover based inaccuracies in screenshots by
-                        // moving the mouse off of the screen before loading tests
-                        await page.mouse.move(-5, -5);
-                        releasePage(page);
+                        releasePage(await prepareNewBrowserPage(browser));
                     })();
                 }
                 for (let i = 0; i < stories.length; i++) {
@@ -102,13 +129,15 @@ module.exports = {
             });
 
             after(async () => {
+                await Promise.all(storyPromises);
                 await Promise.all([browser.close(), server.stop()]);
             });
 
             describe('default view', function () {
                 for (let i = 0; i < stories.length; i++) {
                     it(`${stories[i]}__${color}__${scale}__${dir}`, async function () {
-                        return (await results[i].test)();
+                        const test = await results[i].test;
+                        storyPromises.push(test());
                     });
                 }
             });
@@ -129,28 +158,61 @@ module.exports = {
 
         async function queueTest(story) {
             const page = await availablePage();
-            return takeAndCompareScreenshot(page, story);
+            if (!page.isClosed()) {
+                return takeAndCompareScreenshot(page, story);
+            }
+            console.log('context open 1:', contextOpen);
+            if (!contextOpen) {
+                browser = await startBrowser();
+            }
+            console.log('context open 2:', contextOpen);
+            const newPage = await prepareNewBrowserPage(browser);
+            return takeAndCompareScreenshot(newPage, story);
         }
 
-        //Process methods
-        async function takeAndCompareScreenshot(page, test) {
-            const testFileName = `${test}__${color}__${scale}__${dir}`;
+        const goToAndReturnPage = async (page, test) => {
+            if (!contextOpen) {
+                browser = await startBrowser();
+            }
             try {
                 await page.goto(
                     `http://127.0.0.1:4444/iframe.html?id=${test}&sp_reduceMotion=true&sp_color=${color}&sp_scale=${scale}&sp_dir=${dir}`,
                     {
                         waitUntil: 'networkidle',
+                        timeout: 11000,
                     }
                 );
                 await page.waitForFunction(
-                    () => !!document.querySelector('#root-inner')
+                    () =>
+                        !!document.querySelector('sp-story-decorator') &&
+                        !!document.querySelector('sp-story-decorator').ready,
+                    null,
+                    {
+                        timeout: 9000,
+                    }
                 );
-                await page.waitForFunction(
-                    () => !!document.querySelector('sp-story-decorator')
-                );
-                await page.waitForFunction(
-                    () => !!document.querySelector('sp-story-decorator').ready
-                );
+                return page;
+            } catch (error) {
+                console.log('error:', JSON.stringify(error));
+                console.log('test:', test);
+                if (page.isClosed()) {
+                    if (!contextOpen) {
+                        browser = await startBrowser();
+                    }
+                    const newPage = await prepareNewBrowserPage(browser);
+                    return goToAndReturnPage(newPage, test);
+                } else if (error.name === 'TimeoutError') {
+                    return goToAndReturnPage(page, test);
+                }
+                throw error;
+            }
+        };
+
+        //Process methods
+        async function takeAndCompareScreenshot(openPage, test) {
+            const testFileName = `${test}__${color}__${scale}__${dir}`;
+            try {
+                let page = await goToAndReturnPage(openPage, test);
                 await page.screenshot({
                     path: `${currentDir}/${type}/${testFileName}.png`,
                 });
@@ -168,16 +230,16 @@ module.exports = {
                         ).to.equal(false);
                     });
                 }
-                return compareScreenshots(test, page);
+                return await compareScreenshots(test, page);
             } catch (error) {
-                releasePage(page);
+                releasePage(openPage);
                 return Promise.resolve(() => {
                     console.log(
-                        `🙅🏼‍♂️ ${testFileName} does not exist in test content.`
+                        `🤷‍♀️ ${testFileName} failed to load. Does it exist in the test content?`
                     );
                     expect(
                         true,
-                        `🙅🏼‍♂️ ${testFileName} does not exist in test content.`
+                        `🤷‍♀️ ${testFileName} failed to load. Does it exist in the test content? ${error}`
                     ).to.equal(false);
                 });
             }
@@ -252,7 +314,7 @@ module.exports = {
                     releasePage(page);
                     resolve(() => {
                         console.log(
-                            `📸 ${testFileName}.png => ${fileSizeInBytes} bytes, ${percentDiff}% different`
+                            `📸 ${testFileName}.png => ${fileSizeInBytes} bytes, ${percentDiff}% different.`
                         );
                         expect(
                             numDiffPixels,

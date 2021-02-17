@@ -27,6 +27,7 @@ module.exports = {
         concurrency = 10
     ) {
         let stories = storiesAll, // storiesAll.splice(0, 8),
+            storiesRemaining = stories.length,
             testQueue = [],
             results = [],
             server,
@@ -84,13 +85,25 @@ module.exports = {
             });
 
             after(async () => {
-                await Promise.all([browser.close(), server.stop()]);
+                return new Promise((resolve) => {
+                    const checkStoriesRemaining = () => {
+                        if (!storiesRemaining) {
+                            Promise.all([browser.close(), server.stop()]).then(
+                                resolve
+                            );
+                        } else {
+                            setTimeout(checkStoriesRemaining, 100);
+                        }
+                    };
+                    setTimeout(checkStoriesRemaining, 100);
+                });
             });
 
             describe('doing it', async function () {
                 for (let i = 0; i < stories.length; i++) {
                     it(`capturing: ${stories[i]}`, async function () {
                         await results[i].test;
+                        storiesRemaining -= 1;
                         expect(true);
                     });
                 }
