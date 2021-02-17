@@ -51,6 +51,7 @@
         { "path": "../tags" },
         { "path": "../textfield" },
         { "path": "../theme" },
+        { "path": "../thumbnail" },
         { "path": "../toast" },
         { "path": "../tooltip" },
         { "path": "../underlay" }
