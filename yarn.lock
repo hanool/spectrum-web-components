@@ -3162,6 +3162,17 @@
   resolved "https://registry.yarnpkg.com/@spectrum-css/vars/-/vars-3.0.0.tgz#c3ef4c2f07bd4f0d2734e730233ca81cb18106e7"
   integrity sha512-fNXU6qmcCbSiUoWGe/m9A8/THRHbpzwZ+iN8o/27tWIzcQIyZBZgjmV/kIMdF1dHpu5CuWik7mGV1Ex8tlzATg==
 
+"@spectrum-web-components/button@^0.11.1":
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/button/-/button-0.11.2.tgz#bc47245e0b360fd36e211ad60439d3eea0231d06"
+  integrity sha512-rTo8+89LdgTmsCzhXSvl8i0Vney3Se+FwnDIPiATQfCfMX31Z+xQBiVz3Okg2YFpSfC8A5hc2yrvi0eRZhlvnw==
+  dependencies:
+    "@spectrum-web-components/base" "^0.3.2"
+    "@spectrum-web-components/icon" "^0.8.2"
+    "@spectrum-web-components/icons-ui" "^0.5.2"
+    "@spectrum-web-components/shared" "^0.9.0"
+    tslib "^2.0.0"
+
 "@spectrum-web-components/dropdown@^0.10.1":
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/@spectrum-web-components/dropdown/-/dropdown-0.10.1.tgz#d292dd561aaf4165c03179b4a48451d75cba6394"
@@ -3176,6 +3187,35 @@
     "@spectrum-web-components/overlay" "^0.8.1"
     "@spectrum-web-components/popover" "^0.7.1"
     "@spectrum-web-components/shared" "^0.9.0"
+    tslib "^2.0.0"
+
+"@spectrum-web-components/overlay@^0.8.1":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/overlay/-/overlay-0.8.2.tgz#2d04da96b4039b34eef8767fc24e659850d851c3"
+  integrity sha512-Kujcid8LxeSYliA8bJtKROEbWP+8VROOGozV5CWETaGvgty2qPdQkKSDmmGGgue1kE6S09xuin3/tJxo5dhAlw==
+  dependencies:
+    "@popperjs/core" "^2.2.2"
+    "@spectrum-web-components/base" "^0.3.2"
+    "@spectrum-web-components/theme" "^0.7.3"
+    popper-max-size-modifier "^0.2.0"
+    tslib "^2.0.0"
+
+"@spectrum-web-components/popover@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/popover/-/popover-0.7.1.tgz#f9b0f6d23ddf2fff8b57636cbeaa5e1708cbd54a"
+  integrity sha512-+OqsFXJoGeuWv1SW/PQZvIWXvUeAErklLE3RJJtdVaCzY0qlR0MlGS2jmUxwy9AdZclHuiwl307vZRqW6SSbfw==
+  dependencies:
+    "@spectrum-web-components/base" "^0.3.1"
+    "@spectrum-web-components/overlay" "^0.8.1"
+    tslib "^2.0.0"
+
+"@spectrum-web-components/shared@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/shared/-/shared-0.9.0.tgz#754ff4ddd0001610caefa59c70c3fb14327075b7"
+  integrity sha512-9stqxnclX89NzMyaJN7CH9lCWpyfoq30hhmxFYEJwDECRrPDgpFpPZzmWs9uL0EAVDdLDmoSfh53mmx3owhMSA==
+  dependencies:
+    "@spectrum-web-components/base" "^0.3.0"
+    focus-visible "^5.1.0"
     tslib "^2.0.0"
 
 "@stylelint/postcss-css-in-js@^0.37.2":
@@ -16851,12 +16891,11 @@ postcss-custom-media@^7.0.8:
   dependencies:
     postcss "^7.0.14"
 
-postcss-custom-properties@^10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/postcss-custom-properties/-/postcss-custom-properties-10.0.0.tgz#5cb31afc530f58ad241f1e836dd5f5f7065334df"
-  integrity sha512-55BPj5FudpCiPZzBaO+MOeqmwMDa+nV9/0QBJBfhZjYg6D9hE+rW9lpMBLTJoF4OTXnS5Po4yM1nMlgkPbCxFg==
+postcss-custom-properties@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/postcss-custom-properties/-/postcss-custom-properties-11.0.0.tgz#f98cd192cd8dfcd8afa3baa1ad5b5d91d01292f3"
+  integrity sha512-Fhnx/QLt+CTt23A/KKVx1anZD9nmVpOxKCKv5owWacMoOsBXFhMAD6SZYbmPMH4nHdIeMUnWOvLZnlY4niS0sA==
   dependencies:
-    postcss "^7.0.17"
     postcss-values-parser "^4.0.0"
 
 postcss-custom-properties@^8.0.11:
